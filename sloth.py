@@ -46,11 +46,7 @@ class JenkinsJobFetcher(threading.Thread):
     return True if image.find('anime') >= 0 else\
            False
 
-def signal_handler(signal, frame):
-  sys.exit(0)
-
 def main():
-  signal.signal(signal.SIGINT, signal_handler)
   t = JenkinsJobFetcher()
   t.setDaemon(True)
   t.start()
