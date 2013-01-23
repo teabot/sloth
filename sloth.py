@@ -19,7 +19,7 @@ def prepare_colours(currentColours, pulseStates):
   return colours
 
 def main():
-  t = JenkinsJobFetcher()
+  t = JenkinsJobFetcher("http://hudson2.datadev.last.fm:8080/")
   t.setDaemon(True)
   t.start()
   while True:

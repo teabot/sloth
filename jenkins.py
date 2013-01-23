@@ -10,16 +10,18 @@ class JenkinsJobFetcher(threading.Thread):
   buildState = list()
   progressState = list()
   lock = threading.Lock()
+  fetchUrl = None
   
-  def __init__(self):
+  def __init__(self, fetchUrl):
     threading.Thread.__init__(self)
+    self.fetchUrl = fetchUrl
 
   def run(self):
     while True:
       try:
         cBuildState = list()
         cProgressState = list()
-        tree = etree.parse("http://hudson2.datadev.last.fm:8080/", self.parser)
+        tree = etree.parse(self.fetchUrl, self.parser)
         elems = tree.xpath(".//tr[starts-with(@id, 'job_')]/td/img[@class]")
         for img in elems:
           src = img.attrib.get("src")
