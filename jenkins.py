@@ -52,10 +52,14 @@ class JenkinsJobFetcher(threading.Thread):
 class JenkinsBuildStatus():
  
   fetcher = None
+  fetchUrl = None
   pulser = Pulser()
+  
+  def __init__(self, fetchUrl):
+    self.fetchUrl = fetchUrl
 
   def start(self):
-    self.fetcher = JenkinsJobFetcher("http://hudson2.datadev.last.fm:8080/")
+    self.fetcher = JenkinsJobFetcher(self.fetchUrl)
     self.fetcher.setDaemon(True)
     self.fetcher.start()
   
