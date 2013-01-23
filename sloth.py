@@ -2,6 +2,7 @@
 
 from lxml import  etree
 import signal, time, re, threading
+import RPi.GPIO as GPIO
 
 class RgbColour():
   r = 0
@@ -39,6 +40,12 @@ class JenkinsJobFetcher(threading.Thread):
   buildState = list()
   progressState = list()
   lock = threading.Lock()
+  
+  red    = RgbColour('ff0000')
+  blue   = RgbColour('0000ff')
+  green  = RgbColour('00ff00')
+  yellow = RgbColour('ffff00')
+  black  = RgbColour('000000')
 
   def __init__(self):
     threading.Thread.__init__(self)
@@ -63,35 +70,46 @@ class JenkinsJobFetcher(threading.Thread):
         pass
       time.sleep(5)
 
-  def build_status_from_image(sel, image):
-    return RgbColour('00ff00') if image.startswith('blue') else\
-           RgbColour('0000ff') if image.startswith('grey') else\
-           RgbColour('ffff00') if image.startswith('yellow') else\
-           RgbColour('ff0000') if image.startswith('red') else\
-           RgbColour('000000')  
+  def build_status_from_image(self, image):
+    return self.green if image.startswith('blue') else\
+           self.blue if image.startswith('grey') else\
+           self.yellow if image.startswith('yellow') else\
+           self.red if image.startswith('red') else\
+           self.black  
 
-  def progress_status_from_image(sel, image):
+  def progress_status_from_image(self, image):
     return True if image.find('anime') >= 0 else\
            False
 
-  def get_colours(pulseValue):
-    colours = list()
-    #if !self.progressState[i]:
-    #  pulseValue = 1.0
-  
-def cubicPulse(x, c=1.5, w=1.5, b = 0.25):
-  x = abs(x - c);
-  if x > w:
-    return 0.0
-  x = (x / w)
-    return 1.0 - x * x * (3.0 - 2.0 * x)     
+def convert_colours_to_bytes(colours, stripLength):
+  column = bytearray(stripLength * 3 + 1)
+  index = 0
+  colourIndex = 0 
+  for colour in colours:
+    column[index]     = colour.green()
+    column[index + 1] = colour.red()
+    column[index + 2] = colour.blue()
+    index += 3
+    colourIndex += 1
+    if colourIndex >= stripLength:
+      break 
+  return column
+ 
+def push_to_spi(raster):
+  spidev.write(raster)
+  spidev.flush()
 
 def main():
   t = JenkinsJobFetcher()
   t.setDaemon(True)
   t.start()
   while True:
-    print t.buildState
-    time.sleep(5)
+    raster = convert_colours_to_bytes(t.buildState, stripLength)
+    push_to_spi(raster)
+    time.sleep(1)
+
+device = "/dev/spidev0.0"
+stripLength = 32
+spidev = file(device, "wb")
 
 main()
