@@ -16,7 +16,7 @@ class Pulser():
   def __repr__(self):
     return self.__str__()
 
-  def getUpdate(self):
+  def get_update(self):
     value = (math.sin(self.position) + 1.0) / 2.0 
     self.position += self.increment
     if self.position > TWO_PI:
