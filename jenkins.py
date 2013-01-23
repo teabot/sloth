@@ -3,6 +3,8 @@
 from lxml import  etree
 import time, re, threading
 from rgb import *
+from pulser import *
+from ledstrip import *
 
 class JenkinsJobFetcher(threading.Thread):
   
@@ -46,4 +48,32 @@ class JenkinsJobFetcher(threading.Thread):
   def progress_status_from_image(self, image):
     return True if image.find('anime') >= 0 else\
            False
+
+class JenkinsBuildStatus():
+ 
+  fetcher = None
+  pulser = Pulser()
+
+  def start(self):
+    self.fetcher = JenkinsJobFetcher("http://hudson2.datadev.last.fm:8080/")
+    self.fetcher.setDaemon(True)
+    self.fetcher.start()
+  
+  def update(self, ledStrip):
+    colours = self.prepare_colours(self.fetcher.buildState, self.fetcher.progressState)
+    ledStrip.push_colours(colours)
+    print "DONE"
+    return 0.5 
+
+  def prepare_colours(self, currentColours, pulseStates):
+    intensity = self.pulser.get_update()
+    colours = list()
+    for i in range(len(currentColours)):
+      sourceColour = currentColours[i]
+      isPulsing = pulseStates[i]
+      if isPulsing:
+        colours.append(sourceColour.atIntensity(intensity))
+      else:
+        colours.append(sourceColour)
+    return colours
 
