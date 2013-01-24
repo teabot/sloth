@@ -3,6 +3,7 @@
 import colorsys
 
 class RgbColour():
+
   red   = 0
   green = 0
   blue  = 0
