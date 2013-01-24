@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import colorsys
+
 class RgbColour():
   red   = 0
   green = 0
@@ -30,9 +32,14 @@ def newHexColour(hexValue):
     int('0x' + hexValue[2:4], 16),\
     int('0x' + hexValue[4:6], 16))
 
+def newHsvColour(hue, saturation, value):
+  rgb = colorsys.hsv_to_rgb(hue, saturation, value)
+  return RgbColour(rgn[0], rgb[1], rgb[2])
+
 RED    = newHexColour('ff0000')
 BLUE   = newHexColour('0000ff')
 GREEN  = newHexColour('00ff00')
 YELLOW = newHexColour('ffff00')
 BLACK  = newHexColour('000000')
+WHITE  = newHexColour('ffffff')
 
