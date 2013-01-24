@@ -7,6 +7,7 @@ class LedStrip():
 
   device = None
   stripLength = 0 
+  colours = None
   #spidev = None
 
   def __init__(self, stripLength, device = "/dev/spidev0.0"):
@@ -17,6 +18,7 @@ class LedStrip():
   def push_colours(self, colours):
     raster = self.convert_colours_to_bytes(colours, self.stripLength)
     self.push_to_spi(raster)
+    self.colours = colours
 
   def push_to_spi(self, raster):
     for b in raster:
