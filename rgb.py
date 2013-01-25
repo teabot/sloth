@@ -33,9 +33,9 @@ def newHexColour(hexValue):
     int('0x' + hexValue[2:4], 16),\
     int('0x' + hexValue[4:6], 16))
 
-def newHsvColour(hue, saturation, value):
+def newHsvColour(hue, saturation=1.0, value=1.0):
   rgb = colorsys.hsv_to_rgb(hue, saturation, value)
-  return RgbColour(rgn[0], rgb[1], rgb[2])
+  return RgbColour(rgb[0], rgb[1], rgb[2])
 
 RED    = newHexColour('ff0000')
 BLUE   = newHexColour('0000ff')
