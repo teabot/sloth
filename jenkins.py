@@ -66,8 +66,7 @@ class JenkinsBuildStatus():
   def update(self, ledStrip):
     colours = self.prepare_colours(self.fetcher.buildState, self.fetcher.progressState)
     ledStrip.push_colours(colours)
-    print "DONE"
-    return 0.5 
+    return 0.015 
 
   def prepare_colours(self, currentColours, pulseStates):
     intensity = self.pulser.get_update()
