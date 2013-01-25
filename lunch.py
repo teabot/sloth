@@ -5,7 +5,7 @@ from ledstrip import *
 
 class Lunch():
  
-  def start(self):
+  def start(self, ledStrip):
     # TODO
   
   def update(self, ledStrip):

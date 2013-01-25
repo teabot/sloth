@@ -15,7 +15,7 @@ def main():
   signal.signal(signal.SIGTERM, signal_handler)
 
   jenkins = JenkinsBuildStatus("http://hudson2.datadev.last.fm:8080/")
-  jenkins.start()
+  jenkins.start(ledStrip)
   try:
     while True:
       delay = jenkins.update(ledStrip)

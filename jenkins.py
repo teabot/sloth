@@ -58,7 +58,7 @@ class JenkinsBuildStatus():
   def __init__(self, fetchUrl):
     self.fetchUrl = fetchUrl
 
-  def start(self):
+  def start(self, ledStrip):
     self.fetcher = JenkinsJobFetcher(self.fetchUrl)
     self.fetcher.setDaemon(True)
     self.fetcher.start()
