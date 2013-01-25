@@ -77,6 +77,6 @@ class JenkinsBuildStatus():
       if isPulsing:
         colours.append(sourceColour.atIntensity(intensity))
       else:
-        colours.append(sourceColour)
+        colours.append(sourceColour.atIntensity(0.7))
     return colours
 
