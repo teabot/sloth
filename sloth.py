@@ -23,7 +23,7 @@ def main():
     while True:
       if lunch.is_active():
         delay = lunch.update(ledStrip)
-      else if jenkins.is_active():
+      elif jenkins.is_active():
         delay = jenkins.update(ledStrip)
       else:
         ledStrip.switch_off()

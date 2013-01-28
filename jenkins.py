@@ -71,7 +71,7 @@ class JenkinsBuildStatus():
 
   def is_active(self):
     t = time.localtime()
-    return t.tm_hour >=8 and t.tm_hour <= 19
+    return t.tm_hour >= 8 and t.tm_hour <= 19
 
   def prepare_colours(self, currentColours, pulseStates):
     intensity = self.pulser.get_update()
