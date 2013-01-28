@@ -31,8 +31,6 @@ class LedStrip():
     self.colours = colours
 
   def push_to_spi(self, raster):
-    #for b in raster:
-    #  print b
     self.spidev.write(raster)
     self.spidev.flush()
 
