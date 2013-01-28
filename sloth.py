@@ -26,6 +26,7 @@ def main():
       else if jenkins.is_active():
         delay = jenkins.update(ledStrip)
       else:
+        ledStrip.switch_off()
         delay = 60
       time.sleep(delay)
   except KeyboardInterrupt:
