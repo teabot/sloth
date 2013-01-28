@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-import sys, signal
+import sys, signal, time
 from jenkins import *
 from ledstrip import *
-#from lunch import *
+from lunch import *
 
 def signal_handler(signal, frame):
   shutdown()
@@ -17,12 +17,16 @@ def main():
 
   jenkins = JenkinsBuildStatus("http://hudson2.datadev.last.fm:8080/")
   jenkins.start(ledStrip)
-  #lunch = Lunch()
-  #lunch.start(ledStrip)
+  lunch = Lunch()
+  lunch.start(ledStrip)
   try:
     while True:
-      delay = jenkins.update(ledStrip)
-      #delay = lunch.update(ledStrip)
+      if lunch.is_active():
+        delay = lunch.update(ledStrip)
+      else if jenkins.is_active():
+        delay = jenkins.update(ledStrip)
+      else:
+        delay = 60
       time.sleep(delay)
   except KeyboardInterrupt:
     shutdown()

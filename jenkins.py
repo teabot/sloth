@@ -29,7 +29,8 @@ class JenkinsJobFetcher(threading.Thread):
           src = img.attrib.get("src")
           match = re.search(".*/(.+\.(png|gif))", src)
           imageName = match.groups()[0]
-          cBuildState.append(self.build_status_from_image(imageName)) 
+          buildStatus = self.build_status_from_image(imageName)
+          cBuildState.append(buildStatus) 
           cProgressState.append(self.progress_status_from_image(imageName)) 
         with self.lock:
           self.buildState = cBuildState
@@ -48,7 +49,7 @@ class JenkinsJobFetcher(threading.Thread):
   def progress_status_from_image(self, image):
     return True if image.find('anime') >= 0 else\
            False
-
+  
 class JenkinsBuildStatus():
  
   fetcher = None
@@ -64,9 +65,13 @@ class JenkinsBuildStatus():
     self.fetcher.start()
   
   def update(self, ledStrip):
-    colours = self.prepare_colours(self.fetcher.buildState, self.fetcher.progressState)
+    colours = self.prepare_colours(self.fetcher.buildState, self.fetcher.progressState) 
     ledStrip.push_colours(colours)
     return 0.015 
+
+  def is_active(self):
+    t = time.localtime()
+    return t.tm_hour >=8 and t.tm_hour <= 19
 
   def prepare_colours(self, currentColours, pulseStates):
     intensity = self.pulser.get_update()
