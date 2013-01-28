@@ -5,6 +5,8 @@ ARGS="/home/pi/git/sloth/sloth.py"
 PIDFILE=/var/run/sloth/sloth.pid
 LOG_DIR=/var/log/sloth
 
+mkdir -p /var/run/sloth
+
 case "$1" in
   start)
     echo "Starting server"
