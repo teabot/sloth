@@ -28,7 +28,7 @@ class Lunch():
 
   def is_active(self):
     t = time.localtime()
-    return t.tm_hour == 13 and t.tm_min == 0
+    return (t.tm_hour == 13 and t.tm_min == 0) or (t.tm_wday == 4 and t.tm_hour == 17 and t.tm_min == 30)
 
 
 TWO_PI = math.pi * 2
