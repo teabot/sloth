@@ -19,6 +19,7 @@ case "$1" in
   stop)
     echo "Stopping server"
     /sbin/start-stop-daemon --stop --pidfile $PIDFILE --verbose
+    rm $PIDFILE
     ;;
   *)
     echo "Usage: /etc/init.d/sloth {start|stop}"

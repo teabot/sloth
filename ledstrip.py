@@ -1,20 +1,17 @@
 #!/usr/bin/python
 
-import RPi.GPIO as GPIO
 import time
 from rgb import *
 
 class LedStrip():
 
-  device = None
   stripLength = 0 
   colours = None
-  spidev = None
+  driver = None
 
-  def __init__(self, stripLength, device = "/dev/spidev0.0"):
-    self.stripLength = stripLength
-    self.device = device
-    self.spidev = file(device, "wb")
+  def __init__(self, driver):
+    self.stripLength = driver.numLEDs
+    self.driver = driver
 
   def switch_off(self):
     for i in range(256): 
@@ -27,15 +24,14 @@ class LedStrip():
 
   def push_colours(self, colours):
     raster = self.convert_colours_to_bytes(colours, self.stripLength)
-    self.push_to_spi(raster)
+    self.push_to_driver(raster)
     self.colours = colours
 
-  def push_to_spi(self, raster):
-    self.spidev.write(raster)
-    self.spidev.flush()
+  def push_to_driver(self, raster):
+    self.driver.update(raster)
 
   def convert_colours_to_bytes(self, colours, stripLength):
-    column = bytearray(stripLength * 3 + 1)
+    column = bytearray(stripLength * 3)
     index = 0
     colourIndex = 0 
     for colour in colours:
@@ -47,4 +43,4 @@ class LedStrip():
       if colourIndex >= stripLength:
         break 
     return column
- 
+

@@ -1,14 +1,13 @@
 #!/usr/bin/python
 
-from lxml import  etree
-import time, re, threading
+import time, threading, ast, urllib
 from rgb import *
 from pulser import *
 from ledstrip import *
 
+
 class JenkinsJobFetcher(threading.Thread):
   
-  parser = etree.HTMLParser()
   buildState = list()
   progressState = list()
   lock = threading.Lock()
@@ -23,15 +22,12 @@ class JenkinsJobFetcher(threading.Thread):
       try:
         cBuildState = list()
         cProgressState = list()
-        tree = etree.parse(self.fetchUrl, self.parser)
-        elems = tree.xpath(".//tr[starts-with(@id, 'job_')]/td/img[@class]")
-        for img in elems:
-          src = img.attrib.get("src")
-          match = re.search(".*/(.+\.(png|gif))", src)
-          imageName = match.groups()[0]
-          buildStatus = self.build_status_from_image(imageName)
+        tree = ast.literal_eval(urllib.urlopen(self.fetchUrl).read());
+        for job in tree["jobs"]:
+          jobColor = job["color"];
+          buildStatus = self.build_status_from_job_color(jobColor)
           cBuildState.append(buildStatus) 
-          cProgressState.append(self.progress_status_from_image(imageName)) 
+          cProgressState.append(self.progress_status_from_job_color(jobColor)) 
         with self.lock:
           self.buildState = cBuildState
           self.progressState = cProgressState
@@ -39,15 +35,15 @@ class JenkinsJobFetcher(threading.Thread):
         pass
       time.sleep(5)
 
-  def build_status_from_image(self, image):
-    return GREEN if image.startswith('blue') else\
-           BLUE if image.startswith('grey') else\
-           YELLOW if image.startswith('yellow') else\
-           RED if image.startswith('red') else\
+  def build_status_from_job_color(self, jobColor):
+    return GREEN if jobColor.startswith('blue') else\
+           BLUE if jobColor.startswith('notbuilt') else\
+           YELLOW if jobColor.startswith('yellow') else\
+           RED if jobColor.startswith('red') else\
            BLACK  
 
-  def progress_status_from_image(self, image):
-    return True if image.find('anime') >= 0 else\
+  def progress_status_from_job_color(self, jobColor):
+    return True if jobColor.find('anime') >= 0 else\
            False
   
 class JenkinsBuildStatus():
