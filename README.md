@@ -6,7 +6,7 @@ the [AdaFruit Occidentalis Raspian](http://learn.adafruit.com/adafruit-raspberry
 build information from our [Jenkins](http://jenkins-ci.org/) server, but it is intended that other displays
 can be easily added.
 
-###Development light-show visualization:
+### Development light-show visualization:
 The sloth script accepts one parameter which is the driver used to display the lights. Supported drivers are:
   1. WS2801: draw led data to a SPI led strip
   2. Visualizer: pops up a raster window representing the led strip
